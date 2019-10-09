@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+def unzip(zipped):
+    return [ i for i, _ in zipped ], [ j for _, j in zipped ]
+
 def arrayMap(f, *x):
+    return np.array(list(map(f,*x)))
+
+def array_map(f, *x):
     return np.array(list(map(f,*x)))
 
 
@@ -41,3 +47,20 @@ def build_poly(x, degree):
     #tx = np.column_stack((tx, randoms))
 
     return tx
+
+
+def split_data(x, y, ratio, seed=1):
+    """
+    split the dataset based on the split ratio. If ratio is 0.8
+    you will have 80% of your data set dedicated to training
+    and the rest dedicated to testing
+    """
+    # set seed
+    np.random.seed(seed)
+    # source: https://stackoverflow.com/a/3677283
+    indices = np.random.permutation(x.shape[0])
+    rate = int(np.floor(indices.shape[0] * ratio))
+    training_idx, test_idx = indices[:rate], indices[rate:]
+    training = (x[training_idx], y[training_idx])
+    test = (x[test_idx], y[test_idx])
+    return training, test
